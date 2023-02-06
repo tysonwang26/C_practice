@@ -9,8 +9,8 @@ struct Node{
 };
 
 
-struct Node *pushNode(struct Node *original_head, struct Node *new_node){
-    printf("push node\n");
+struct Node *pushNodeToLast(struct Node *original_head, struct Node *new_node){
+    printf("push node to last\n");
     struct Node *head = original_head;
     struct Node *node = original_head;
     while(node != NULL){
@@ -24,10 +24,30 @@ struct Node *pushNode(struct Node *original_head, struct Node *new_node){
     return head;
 }
 
-struct Node *popNode(struct Node *head){
+struct Node *pushNodeToFirst(struct Node *original_head, struct Node *new_node){
+    printf("push node\n");
+    new_node->next_node = original_head;
+    return new_node;
+}
+
+struct Node *popFirstNode(struct Node *head){
     printf("pop node\n");
     head = head->next_node;
     return head;
+}
+
+struct Node *popLastNode(struct Node *head){
+    struct Node *tmp = head;
+    while(head->next_node != NULL){
+        printf("%p\t%d\n", head, head->value);
+        if(head->next_node->next_node == NULL){
+            tmp = head->next_node;
+            head->next_node = NULL;
+            break;
+        }
+        head = head->next_node;
+    }
+    return tmp;
 }
 
 void printQueue(struct Node *head){
@@ -40,21 +60,29 @@ void printQueue(struct Node *head){
 
 int main(){
 
-    struct Node queue_head = {
+    struct Node *queue_head;
+
+    struct Node head = {
         .value = 1,
         .next_node = NULL
     };
 
-    struct Node new_node = {
+    struct Node new_node1 = {
         .value = 2,
         .next_node = NULL
     };
 
-    queue_head = *pushNode(&queue_head, &new_node);
+    queue_head = &head;
 
-    printQueue(&queue_head);
+    queue_head = pushNodeToFirst(queue_head, &new_node1);
+    printQueue(queue_head);
 
-    queue_head = *popNode(&queue_head);
-    printQueue(&queue_head);
+    // queue_head = popFirstNode(queue_head);
+    // printQueue(queue_head);
+
+    struct Node *last_node = popLastNode(queue_head);
+    printf("%d\n", last_node->value);
+    printQueue(queue_head);
+
     return 0;
 }
